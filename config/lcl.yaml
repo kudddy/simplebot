@@ -1,0 +1,20 @@
+app:
+  constants:
+    timeout_for_chat: 100
+    debug: False
+    use_black_list: True
+    numbers_of_attemp: 10
+    bot_token: 1238618041:AAGiAHI9FyQHMM4IpYqS_YRTMTxCpDnODJM
+    default_model: version 2
+  hosts:
+    mc:
+      host: memcached
+      port: 11211
+    pg:
+      host: 127.0.0.1
+      port: 5432
+      url: postgresql://user:pass@postgres:5432/db
+    sheduler:
+      url: http://0.0.0.0:9000/start
+
+

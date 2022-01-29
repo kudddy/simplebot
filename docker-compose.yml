@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - memcached
+      - postgres
+    volumes:
+        - ./config:/app/config
+  memcached:
+    image: memcached
+    ports:
+      - 11211:11211
+    environment:
+      I: 5m
+  postgres:
+    image: postgres:9.6
+    ports:
+      - 5432:5432
+    environment:
+        POSTGRES_PASSWORD: pass
+        POSTGRES_USER: user
+        POSTGRES_DB: db
+
+volumes:
+  config:
