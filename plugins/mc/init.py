@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 
 log.setLevel(logging.INFO)
 
+# TODO написать абстрактный класс для взаимодействия с k:v
 
 def encode_input_value(func):
     # TODO есть впечатление что операция блокирующая

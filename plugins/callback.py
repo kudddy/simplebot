@@ -71,3 +71,8 @@ async def nothing_fount(m: Updater,
                                    text)
 
     return 1
+
+
+async def lolo(m: Updater,
+               systems: Systems):
+    systems.model.predict()

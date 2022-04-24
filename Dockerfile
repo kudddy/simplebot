@@ -9,8 +9,11 @@ RUN apt-get update \
                               pkg-config libpoppler-private-dev libpoppler-cpp-dev\
     && apt-get clean
 
-COPY . /app
+COPY requirements.txt /app/requirements.txt
 WORKDIR /app
 
 RUN pip3 install -r requirements.txt
+
+COPY . /app
+
 CMD python3 main.py
