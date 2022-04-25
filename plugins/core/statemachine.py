@@ -1,6 +1,6 @@
 from message_schema import Updater
 
-from plugins.core.config import cfg
+from plugins.core.config import setting
 
 
 # TODO паразитная зависимость
@@ -67,7 +67,6 @@ class Stages:
             key = {'step': step}
 
         # записываем обновленные данные по сессии
-        await self.systems.mc.set(chat_id, key, cfg.app.constants.timeout_for_chat)
+        await self.systems.mc.set(chat_id, key, setting.app.configuration.timeout_for_chat)
         # возвращаем результат для тестирования навыка
-        print(step)
         return step

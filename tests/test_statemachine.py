@@ -1,13 +1,14 @@
 import asynctest
 import logging
-from asyncpgsa import PG
-from aiomcache import Client
+# from asyncpgsa import PG
+# from aiomcache import Client
 from time import sleep
 
 from plugins.callback import hello, get_present, goodbye, where_food, nothing_fount
-from plugins.core.config import cfg
+from plugins.core.config import setting
 from plugins.tools.tokenizer import QueryBuilder
-from plugins.mc.init import AioMemCache
+from plugins.core.cache import CacheProvider
+from plugins.core.db import DbProvider
 from plugins.core.statemachine import Stages
 from plugins.core.statemachine import Systems
 from plugins.core.classifier import Model
@@ -47,26 +48,34 @@ def generate_payload(text: str):
 
 async def init_stages():
     # Инициализируем соединие с mc
-    memcached = Client(
-        cfg.app.hosts.mc.host,
-        cfg.app.hosts.mc.port,
-        pool_size=2)
+    # memcached = Client(
+    #     cfg.app.hosts.mc.host,
+    #     cfg.app.hosts.mc.port,
+    #     pool_size=2)
+    #
+    # global_cache = AioMemCache(memcached)
+    #
+    # global_cache.cache.flush_all()
 
-    global_cache = AioMemCache(memcached)
 
-    global_cache.cache.flush_all()
 
     # Инициализируем соединение с базой данных
-    pg = PG()
+    # pg = PG()
+    #
+    # pg_pool_min_size = 10
+    # pg_pool_max_size = 10
+    #
+    # await pg.init(
+    #     str(cfg.app.hosts.pg.url),
+    #     min_size=pg_pool_min_size,
+    #     max_size=pg_pool_max_size
+    # )
 
-    pg_pool_min_size = 10
-    pg_pool_max_size = 10
+    memcached = CacheProvider()
 
-    await pg.init(
-        str(cfg.app.hosts.pg.url),
-        min_size=pg_pool_min_size,
-        max_size=pg_pool_max_size
-    )
+    pg = DbProvider()
+
+
 
     train_data: dict = {
         "*": 1,
@@ -89,13 +98,13 @@ async def init_stages():
         4: where_food
     }
 
-    systems = Systems(mc=global_cache,
+    systems = Systems(mc=memcached,
                       pg=pg,
                       tokenizer=QueryBuilder(out_clean='str', out_token='list'),
-                      bot=Bot(token=cfg.app.constants.bot_token),
+                      bot=Bot(token=setting.app.configuration.bot_token),
                       mod=model,
                       permission=True,
-                      user_model=cfg.app.constants.default_model)
+                      user_model=None)
 
     stage = Stages(state, systems)
 
@@ -107,7 +116,6 @@ class TestInternalSystem(asynctest.TestCase):
     async def test_node_with_timeout(self):
         stage, memcached, pg = await init_stages()
 
-        memcached.flush_all()
         states = ["Привет", "Подарок", "пока", "еда"]
 
         for text in states:
@@ -117,7 +125,8 @@ class TestInternalSystem(asynctest.TestCase):
 
             # засыпаем чтобы вернуться в первоначальный стейн
             if text == "Cледующая":
-                sleep(cfg.app.constants.timeout_for_chat + 2)
+                sleep(setting.app.configuration.timeout_for_chat + 2)
+
             state_number = await stage.next(message)
 
             if text == "Привет":
@@ -137,6 +146,6 @@ class TestInternalSystem(asynctest.TestCase):
                 log.debug("we remain in the same state, but go through all the recommendations, but timeout")
                 self.assertEqual(state_number, 4)
 
-        memcached.close()
-        pg.pool.close()
+        # memcached.close()
+        # pg.pool.close()
 

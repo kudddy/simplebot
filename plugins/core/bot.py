@@ -1,8 +1,11 @@
 import logging
 import json
+from time import sleep
+from typing import Union
+
+from message_schema import Updates
 
 from aiohttp_requests import requests
-
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -13,6 +16,37 @@ URL_SEND_MESSAGE = "https://api.telegram.org/bot{}/sendMessage"
 URL_EDIT_MESSAGE = "https://api.telegram.org/bot{}/editMessageText"
 URL_SEND_ANIMATION = "https://api.telegram.org/bot{}/sendAnimation"
 URL_SEND_VIDEO = "https://api.telegram.org/bot{}/sendVideo"
+
+
+class Retry:
+    def __init__(self, retry=5, time_to_sleep=15):
+        self._retry = retry
+        self._count = 0
+        self._time_to_sleep = time_to_sleep
+
+    async def send(self, method: str,
+                   url: str,
+                   headers: dict):
+
+        try:
+            data = await requests(method,
+                                  url,
+                                  headers=headers)
+            return data
+
+        except requests.exceptions.ConnectionError:
+            log.info("problems with request, start retry")
+
+            self._count += 1
+
+            if self._retry > self._count:
+                sleep(self._time_to_sleep)
+                return self.send(method, url, headers)
+            else:
+                return -1
+
+
+retry = Retry()
 
 
 class Bot:
@@ -55,7 +89,8 @@ class Bot:
             "Content-Type": "application/json"
         }
 
-        response = await requests.get(URL_SEND_MESSAGE.format(self.token), headers=headers, data=json.dumps(payload), ssl=False)
+        response = await requests.get(URL_SEND_MESSAGE.format(self.token), headers=headers, data=json.dumps(payload),
+                                      ssl=False)
 
         response = await response.json()
 
@@ -127,7 +162,8 @@ class Bot:
             "animation": file_id
         }
 
-        response = await requests.get(URL_SEND_ANIMATION.format(self.token), headers=headers, data=json.dumps(payload), ssl=False)
+        response = await requests.get(URL_SEND_ANIMATION.format(self.token), headers=headers, data=json.dumps(payload),
+                                      ssl=False)
         response = await response.json()
         res = response.get("ok")
 
@@ -146,7 +182,8 @@ class Bot:
             "video": file_id
         }
 
-        response = await requests.get(URL_SEND_VIDEO.format(self.token), headers=headers, data=json.dumps(payload), ssl=False)
+        response = await requests.get(URL_SEND_VIDEO.format(self.token), headers=headers, data=json.dumps(payload),
+                                      ssl=False)
         response = await response.json()
         res = response.get("ok")
 
@@ -155,4 +192,37 @@ class Bot:
         else:
             log.debug("request with payload: %s delivered to tlg with error: %s", payload, response)
 
+    async def get_updates(self, offset: int) -> Union[Updates, int]:
+        headers = {
+            "Content-Type": "application/json"
+        }
+        # data = request("GET",
+        #                f"https://api.telegram.org/bot{token}/getUpdates?offset={offset}",
+        #                headers=headers)
 
+        data = await retry.send("GET",
+                                f"https://api.telegram.org/bot{self.token}/getUpdates?offset={offset}",
+                                headers=headers)
+
+        if data == -1:
+            log.warning("long timeout")
+            return -1
+
+        log.debug(f"bot with token - {self.token} gets update with status - {data.status_code}")
+
+        if data.status_code == 200:
+            try:
+                response = Updates(**data.json())
+                return response
+            except ValidationError as e:
+                return -1
+        else:
+            try:
+                log.info(
+                    f"something wrong with bot - "
+                    f"{self.token} gets update with status - "
+                    f"{data.status_code} and payload - {data.json()}"
+                )
+            except Exception as e:
+                log.info(f"can't decode json from response, error - {str(e)}")
+            return -1

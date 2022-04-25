@@ -9,7 +9,7 @@ from collections import defaultdict, Iterable
 
 import html2text
 from aiohttp_requests import requests
-from plugins.core.config import cfg
+from plugins.core.config import setting
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -167,7 +167,7 @@ async def send_video(url: str, chat_id: int, file_id: str):
 
 
 async def get_file_path(file_id: str) -> str:
-    url = cfg.app.hosts.tlg.get_file_path.format(file_id)
+    url = setting.app.hosts.tlg.get_file_path.format(file_id)
     response = await requests.get(url, ssl=False)
     response = await response.json()
 
@@ -175,7 +175,7 @@ async def get_file_path(file_id: str) -> str:
 
 
 async def get_file(file_path: str) -> object:
-    url = cfg.app.hosts.tlg.get_file.format(file_path)
+    url = setting.app.hosts.tlg.get_file.format(file_path)
     response = await requests.get(url, ssl=False)
     response = await response.json()
     # TODO получить octstream file
@@ -191,7 +191,7 @@ async def push_to_queue(file: str) -> str:
 
 async def generate_auth_message(url: str, vacancy_id: int) -> str:
     log.debug("we requesting auth user message")
-    auth = aiohttp.BasicAuth(cfg.app.pwd.sf.us, cfg.app.pwd.sf.ps)
+    auth = aiohttp.BasicAuth(setting.app.pwd.sf.us, setting.app.pwd.sf.ps)
 
     response = await requests.get(url.format(vacancy_id),
                                   auth=auth,

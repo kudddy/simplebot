@@ -8,10 +8,10 @@ from asyncpgsa.transactionmanager import ConnectionTransactionContextManager
 from sqlalchemy import Numeric, cast, func
 from sqlalchemy.sql import Select
 
-from plugins.core.config import cfg
+from plugins.core.config import setting
 
 CENSORED = '***'
-DEFAULT_PG_URL = cfg.app.hosts.pg.url
+DEFAULT_PG_URL = setting.app.hosts.pg.url
 MAX_QUERY_ARGS = 32767
 MAX_INTEGER = 2147483647
 

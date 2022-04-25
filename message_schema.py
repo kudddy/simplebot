@@ -153,6 +153,11 @@ class Updater(BaseModel):
         return username
 
 
+class Updates(BaseModel):
+    ok: bool
+    result: List[Updater]
+
+
 data_for_callback = {
     "update_id": 632560344,
     "callback_query": {
