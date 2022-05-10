@@ -83,5 +83,6 @@ class Updater:
 
                 offset = resp.result[-1].update_id + 1
 
+    # TODO сделать через очередь с ограничением кол-во обрабатываемых корутин
     def run_pulling(self):
         asyncio.run(self._create_app_pulling())

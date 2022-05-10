@@ -5,4 +5,4 @@ from plugins.core.start import Updater
 
 app = Updater()
 
-app.run_pulling()
+app.run_hook()
