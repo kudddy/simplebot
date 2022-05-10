@@ -3,9 +3,15 @@ import json
 from time import sleep
 from typing import Union
 
+from asyncio import sleep
+
+from pydantic import ValidationError
+
 from message_schema import Updates
 
 from aiohttp_requests import requests
+
+import requests as req
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -29,19 +35,20 @@ class Retry:
                    headers: dict):
 
         try:
-            data = await requests(method,
-                                  url,
-                                  headers=headers)
+            data = await requests.get(url,
+                                      headers=headers,
+                                      ssl=False)
             return data
 
-        except requests.exceptions.ConnectionError:
+        except req.exceptions.ConnectionError:
+
             log.info("problems with request, start retry")
 
             self._count += 1
 
             if self._retry > self._count:
-                sleep(self._time_to_sleep)
-                return self.send(method, url, headers)
+                await sleep(self._time_to_sleep)
+                return await self.send(method, url, headers)
             else:
                 return -1
 
@@ -208,11 +215,12 @@ class Bot:
             log.warning("long timeout")
             return -1
 
-        log.debug(f"bot with token - {self.token} gets update with status - {data.status_code}")
+        log.debug(f"bot with token - {self.token} gets update with status - {data.status}")
 
-        if data.status_code == 200:
+        if data.status == 200:
             try:
-                response = Updates(**data.json())
+                data = await data.json()
+                response = Updates(**data)
                 return response
             except ValidationError as e:
                 return -1
@@ -221,7 +229,7 @@ class Bot:
                 log.info(
                     f"something wrong with bot - "
                     f"{self.token} gets update with status - "
-                    f"{data.status_code} and payload - {data.json()}"
+                    f"{data.status} and payload - {await data.json()}"
                 )
             except Exception as e:
                 log.info(f"can't decode json from response, error - {str(e)}")

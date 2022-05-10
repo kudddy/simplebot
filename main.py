@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
-from aiohttp.web import run_app
-from app import create_app
+from plugins.core.start import Updater
 
-if __name__ == '__main__':
-    app = create_app()
-    run_app(app)
+
+app = Updater()
+
+app.run_pulling()
