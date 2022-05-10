@@ -3,8 +3,8 @@ from aiohttp.web_app import Application
 
 from plugins.callback import hello, get_present, goodbye, where_food, nothing_fount
 from plugins.core.config import setting
-from plugins.core.cache import CacheProvider
-from plugins.core.db import DbProvider
+from plugins.cache.adapter import CacheProvider
+from plugins.db.adapter import DbProvider
 from plugins.core.bot import Bot
 from plugins.core.statemachine import Stages
 from plugins.core.classifier import Model
@@ -34,8 +34,6 @@ state = {
 
 @dataclass
 class Systems:
-    # высокоуровневый доступ к memcached,
-    # mc = AioMemCache(app['mc'])
     mc = CacheProvider()
     # TODO need to solve the problem with closing connection
     pg = DbProvider().init_adapter()

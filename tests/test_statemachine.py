@@ -5,9 +5,8 @@ from time import sleep
 
 from plugins.callback import hello, get_present, goodbye, where_food, nothing_fount
 from plugins.core.config import setting
-from plugins.tools.tokenizer import QueryBuilder
-from plugins.core.cache import CacheProvider
-from plugins.core.db import DbProvider
+from plugins.cache.adapter import CacheProvider
+from plugins.db.adapter import DbProvider
 from plugins.core.statemachine import Stages
 from plugins.core.statemachine import Systems
 from plugins.core.classifier import Model
