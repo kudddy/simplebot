@@ -9,18 +9,12 @@ class Systems:
     def __init__(self,
                  mc,
                  pg,
-                 tokenizer,
                  bot,
-                 mod,
-                 permission,
-                 user_model):
+                 mod):
         self.mc = mc
         self.pg = pg
-        self.tokenizer = tokenizer
         self.bot = bot
         self.model = mod
-        self.permission = permission
-        self.user_model = user_model
 
 
 class Stages:

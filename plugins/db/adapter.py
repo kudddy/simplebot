@@ -27,10 +27,14 @@ class DbAdapter(metaclass=ABCMeta):
 class DbProvider(DbAdapter):
     def __init__(self):
 
-        self.db = self._get_adapter()
+        self.db = None
+
+    async def init_adapter(self):
+        self.db = await self._get_adapter()
 
     @staticmethod
     async def _get_adapter() -> Union[PG, None]:
+        print(setting.app.db.db_type)
         if setting.app.db.db_type == "pg":
             return await PG().init(
                 str(DEFAULT_PG_URL),

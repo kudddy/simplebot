@@ -1,7 +1,7 @@
 import asynctest
 from time import sleep
 
-from plugins.core.cache import InMemoryStorage
+from plugins.cache.adapter import InMemoryStorage
 
 cache = InMemoryStorage(cache={})
 

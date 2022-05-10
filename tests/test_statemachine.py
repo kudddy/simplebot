@@ -1,14 +1,12 @@
 import asynctest
 import logging
-# from asyncpgsa import PG
-# from aiomcache import Client
+
 from time import sleep
 
-from plugins.callback import hello, get_present, goodbye, where_food, nothing_fount
+from callback import hello, get_present, goodbye, where_food, nothing_fount
 from plugins.core.config import setting
-from plugins.tools.tokenizer import QueryBuilder
-from plugins.core.cache import CacheProvider
-from plugins.core.db import DbProvider
+from plugins.cache.adapter import CacheProvider
+from plugins.db.adapter import DbProvider
 from plugins.core.statemachine import Stages
 from plugins.core.statemachine import Systems
 from plugins.core.classifier import Model
@@ -47,35 +45,9 @@ def generate_payload(text: str):
 
 
 async def init_stages():
-    # Инициализируем соединие с mc
-    # memcached = Client(
-    #     cfg.app.hosts.mc.host,
-    #     cfg.app.hosts.mc.port,
-    #     pool_size=2)
-    #
-    # global_cache = AioMemCache(memcached)
-    #
-    # global_cache.cache.flush_all()
+    cache = CacheProvider()
 
-
-
-    # Инициализируем соединение с базой данных
-    # pg = PG()
-    #
-    # pg_pool_min_size = 10
-    # pg_pool_max_size = 10
-    #
-    # await pg.init(
-    #     str(cfg.app.hosts.pg.url),
-    #     min_size=pg_pool_min_size,
-    #     max_size=pg_pool_max_size
-    # )
-
-    memcached = CacheProvider()
-
-    pg = DbProvider()
-
-
+    db = DbProvider().init_adapter()
 
     train_data: dict = {
         "*": 1,
@@ -98,17 +70,14 @@ async def init_stages():
         4: where_food
     }
 
-    systems = Systems(mc=memcached,
-                      pg=pg,
-                      tokenizer=QueryBuilder(out_clean='str', out_token='list'),
+    systems = Systems(mc=cache,
+                      pg=db,
                       bot=Bot(token=setting.app.configuration.bot_token),
-                      mod=model,
-                      permission=True,
-                      user_model=None)
+                      mod=model)
 
     stage = Stages(state, systems)
 
-    return stage, memcached, pg
+    return stage, cache, db
 
 
 class TestInternalSystem(asynctest.TestCase):
@@ -145,7 +114,3 @@ class TestInternalSystem(asynctest.TestCase):
                 log.debug("phrase check - yes")
                 log.debug("we remain in the same state, but go through all the recommendations, but timeout")
                 self.assertEqual(state_number, 4)
-
-        # memcached.close()
-        # pg.pool.close()
-

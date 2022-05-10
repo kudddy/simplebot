@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from aiohttp.web_app import Application
 
-from plugins.callback import hello, get_present, goodbye, where_food, nothing_fount
+from callback import hello, get_present, goodbye, where_food, nothing_fount
 from plugins.core.config import setting
-from plugins.tools.tokenizer import QueryBuilder
-from plugins.core.cache import CacheProvider
+from plugins.cache.adapter import CacheProvider
+from plugins.db.adapter import DbProvider
 from plugins.core.bot import Bot
 from plugins.core.statemachine import Stages
 from plugins.core.classifier import Model
@@ -32,25 +32,29 @@ state = {
 }
 
 
+@dataclass
+class Systems:
+    mc = CacheProvider()
+    # TODO need to solve the problem with closing connection
+    pg = DbProvider().init_adapter()
+
+    bot = Bot(token=setting.app.configuration.bot_token)
+
+    model = model
+
+
+stage = Stages(stages=state,
+               systems=Systems())
+
+
 async def init_stages(app: Application):
     # инициализация объектов(возможно стоит сделать в качестве динамически
     # подключаемых плагинов)
 
     # TODO переименовать QueryBuilder
 
-    # TODO add flag in settings to select cache adapter
+    # cache = CacheProvider()
+    #
+    # db = DbProvider()
 
-    @dataclass
-    class Systems:
-        # высокоуровневый доступ к memcached,
-        # mc = AioMemCache(app['mc'])
-        mc = CacheProvider()
-        pg = app['pg']
-        tokenizer = QueryBuilder(out_clean='str', out_token='list')
-        bot = Bot(token=setting.app.constants.bot_token)
-        mod = model
-        permission = True
-        user_model = setting.app.constants.default_model
-
-    app['stage'] = Stages(stages=state,
-                          systems=Systems())
+    app['stage'] = stage
