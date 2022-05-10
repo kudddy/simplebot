@@ -13,7 +13,7 @@ from aiohttp_apispec import setup_aiohttp_apispec
 from handlers import HANDLERS
 from payloads import AsyncGenJSONListPayload, JsonPayload
 
-from plugins.configurator import init_stages, stage
+from configurator import init_stages, stage
 
 api_address = "0.0.0.0"
 api_port = 8081

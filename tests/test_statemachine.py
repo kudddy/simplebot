@@ -3,7 +3,7 @@ import logging
 
 from time import sleep
 
-from plugins.callback import hello, get_present, goodbye, where_food, nothing_fount
+from callback import hello, get_present, goodbye, where_food, nothing_fount
 from plugins.core.config import setting
 from plugins.cache.adapter import CacheProvider
 from plugins.db.adapter import DbProvider
@@ -114,6 +114,3 @@ class TestInternalSystem(asynctest.TestCase):
                 log.debug("phrase check - yes")
                 log.debug("we remain in the same state, but go through all the recommendations, but timeout")
                 self.assertEqual(state_number, 4)
-
-        # memcached.close()
-        # pg.pool.close()

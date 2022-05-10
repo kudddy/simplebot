@@ -1,7 +1,5 @@
 import asynctest
-from aiomcache import Client
 from plugins.cache.adapter import CacheProvider
-from plugins.core.config import setting
 
 
 # TODO tests are written only for local cache

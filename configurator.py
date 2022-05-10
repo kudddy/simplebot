@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from aiohttp.web_app import Application
 
-from plugins.callback import hello, get_present, goodbye, where_food, nothing_fount
+from callback import hello, get_present, goodbye, where_food, nothing_fount
 from plugins.core.config import setting
 from plugins.cache.adapter import CacheProvider
 from plugins.db.adapter import DbProvider
