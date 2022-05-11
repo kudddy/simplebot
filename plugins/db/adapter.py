@@ -34,13 +34,13 @@ class DbProvider(DbAdapter):
 
     @staticmethod
     async def _get_adapter() -> Union[PG, None]:
-        print(setting.app.db.db_type)
         if setting.app.db.db_type == "pg":
             return await PG().init(
                 str(DEFAULT_PG_URL),
                 min_size=pg_pool_min_size,
                 max_size=pg_pool_max_size
             )
+        # TODO добавить SQLITE
         elif setting.app.db.db_type == "inmemory":
             return None
         else:

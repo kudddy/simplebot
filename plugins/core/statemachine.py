@@ -17,6 +17,7 @@ class Systems:
         self.model = mod
 
 
+# TODO добавить сессию для пользователей
 class Stages:
     def __init__(self,
                  stages: dict,
@@ -38,6 +39,8 @@ class Stages:
         text = m.get_text()
         chat_id = m.get_chat_id()
         # запрашиваем глобальный кэш
+        # TODO обозначение key выглядит странным
+        # в него нужно записывать сессионные данные, также пользователь может их кастомизировать
         key = await self.systems.mc.get(chat_id)
         # если есть то смотрим на шаг
         if key:
