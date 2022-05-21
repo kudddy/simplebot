@@ -54,5 +54,4 @@ class MyAppTestCase(AioHTTPTestCase):
         async with self.client.request("POST", "/tlg/", json=generate_payload("подарок")) as resp:
             self.assertEqual(resp.status, 200)
             text = await resp.text()
-            print(text)
         self.assertIn("ok", text)

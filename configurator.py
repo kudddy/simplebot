@@ -32,8 +32,11 @@ state = {
 }
 
 
+### TODO вот это все должно быть под капотом
+
 @dataclass
 class Systems:
+    # TODO need rename this adapter
     mc = CacheProvider()
     # TODO need to solve the problem with closing connection
     pg = DbProvider().init_adapter()

@@ -49,7 +49,7 @@ class Stages:
         # если нет, то в начальном стейте
         else:
             step = 0
-
+        # TODO add more state machines
         # вызываем функцию соответствующу стейту
         await self.stages[step].__call__(m, self.systems)
 
