@@ -5,13 +5,22 @@ import time
 import logging
 
 from aiohttp_requests import requests
-from ...plugins.core.config import setting
+from ..core.config import setting
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 log.setLevel(logging.DEBUG)
 
+
+class Coder:
+    @staticmethod
+    def encode(obj: object):
+        return json.dumps(obj).encode()
+
+    @staticmethod
+    def decode(byte: bytes):
+        return json.loads(byte.decode())
 
 def timing(f):
     def wrap(*args, **kwargs):

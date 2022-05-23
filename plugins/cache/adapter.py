@@ -7,8 +7,8 @@ from typing import Dict, Any
 
 from aiomcache import Client
 
-from plugins.core.helper import Coder
-from ...plugins.core.config import setting
+from ..core.helper import Coder
+from ..core.config import setting
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)

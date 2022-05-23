@@ -1,5 +1,5 @@
-from .processor import GetMessageFromTlg
-
-HANDLERS = (
-    GetMessageFromTlg,
-)
+# from ..handlers.processor import GetMessageFromTlg
+#
+# HANDLERS = (
+#     GetMessageFromTlg,
+# )

@@ -3,7 +3,7 @@ import logging
 
 from time import sleep
 
-from callback import hello, get_present, goodbye, where_food, nothing_fount
+from plugins.core.callback import hello, get_present, goodbye, where_food, nothing_fount
 from plugins.core.config import setting
 from plugins.cache.adapter import CacheProvider
 from plugins.db.adapter import DbProvider
@@ -12,7 +12,7 @@ from plugins.core.statemachine import Systems
 from plugins.core.classifier import Model
 from plugins.core.bot import Bot
 
-from message_schema import Updater
+from plugins.core.message_schema import Updater
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)

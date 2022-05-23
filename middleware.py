@@ -1,7 +1,7 @@
 import functools
 import asyncio
 
-from message_schema import Updater
+from plugins.core.message_schema import Updater
 from plugins.core.statemachine import Systems
 from plugins.pg.query import insert_date_to_audit, get_count_call_state_photo, \
     check_user_in_black_list, add_user_to_black_list, check_user_in_white_list, select_user_model

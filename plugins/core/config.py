@@ -22,7 +22,6 @@ def yaml_config_settings_source() -> Dict[str, Any]:
     return config
 
 
-
 class Config(BaseModel):
     timeout_for_chat: int
     debug: bool
@@ -63,5 +62,3 @@ class Settings(BaseModel):
 
 
 setting = Settings(**yaml_config_settings_source())
-
-

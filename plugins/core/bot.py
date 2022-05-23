@@ -7,7 +7,7 @@ from asyncio import sleep
 
 from pydantic import ValidationError
 
-from message_schema import Updates
+from plugins.core.message_schema import Updates
 
 from aiohttp_requests import requests
 

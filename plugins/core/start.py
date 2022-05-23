@@ -9,11 +9,12 @@ from aiohttp import PAYLOAD_REGISTRY
 from aiohttp.web_app import Application
 from aiohttp.web import run_app
 from aiohttp_apispec import setup_aiohttp_apispec
+try:
+    from handlers import HANDLERS
+except:
+    pass
 
-from handlers import HANDLERS
-from payloads import AsyncGenJSONListPayload, JsonPayload
-
-from ...configurator import init_stages, stage
+from ..core.configurator import init_stages, stage
 
 api_address = "0.0.0.0"
 api_port = 8081
