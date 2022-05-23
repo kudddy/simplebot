@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from aiohttp.web_app import Application
 
-from plugins.core.callback import hello, get_present, goodbye, where_food, nothing_fount
-from plugins.core.config import setting
-from plugins.cache.adapter import CacheProvider
-from plugins.db.adapter import DbProvider
-from plugins.core.bot import Bot
-from plugins.core.statemachine import Stages
-from plugins.core.classifier import Model
+from ..core.callback import hello, get_present, goodbye, where_food, nothing_fount
+from ..core.config import setting
+from ..cache.adapter import CacheProvider
+from ..db.adapter import DbProvider
+from ..core.bot import Bot
+from ..core.statemachine import Stages
+from ..core.classifier import Model
 
 INIT_INTENT = 0
 

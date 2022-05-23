@@ -1,7 +1,7 @@
 import logging
 
-from plugins.core.message_schema import Updater
-from plugins.core.statemachine import Systems
+from ..core.message_schema import Updater
+from ..core.statemachine import Systems
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
