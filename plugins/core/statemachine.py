@@ -1,6 +1,6 @@
 from message_schema import Updater
 
-from plugins.core.config import setting
+from ...plugins.core.config import setting
 
 
 # TODO паразитная зависимость

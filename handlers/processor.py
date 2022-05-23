@@ -4,7 +4,7 @@ from aiohttp.web_response import Response
 from aiohttp_apispec import docs
 
 from .base import BaseView
-from message_schema import Updater
+from ..message_schema import Updater
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)

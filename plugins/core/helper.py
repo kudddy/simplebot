@@ -1,16 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
-import re
-import sys
 import time
 import logging
-import aiohttp
-from collections import defaultdict, Iterable
 
-import html2text
 from aiohttp_requests import requests
-from plugins.core.config import setting
+from ...plugins.core.config import setting
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)

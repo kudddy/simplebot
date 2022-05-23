@@ -8,7 +8,7 @@ from asyncpgsa.transactionmanager import ConnectionTransactionContextManager
 from sqlalchemy import Numeric, cast, func
 from sqlalchemy.sql import Select
 
-from plugins.core.config import setting
+from ....plugins.core.config import setting
 
 CENSORED = '***'
 DEFAULT_PG_URL = setting.app.db.config.url

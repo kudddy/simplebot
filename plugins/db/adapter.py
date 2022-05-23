@@ -2,7 +2,7 @@ from asyncpgsa import PG
 from abc import ABCMeta, abstractmethod
 from typing import Union
 
-from plugins.core.config import setting
+from ...plugins.core.config import setting
 
 CENSORED = '***'
 DEFAULT_PG_URL = setting.app.db.config.url

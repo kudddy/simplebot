@@ -3,7 +3,7 @@ import logging
 from aiohttp.web_app import Application
 from aiomcache import Client
 
-from plugins.core.config import setting
+from ....plugins.core.config import setting
 from plugins.core.helper import Coder
 
 logging.basicConfig(level=logging.INFO)
